@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>山东大学拉屎指南 · 校园舒适地图</title>
+<meta name="description" content="从洪家楼到威海，一份沿着校园道路慢慢建起来的山东大学非官方舒适指南。" />
+<link rel="icon" href="assets/sdu-mark.png" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="scene-wash" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="edge-type edge-type--l" aria-hidden="true">CAMPUS COMFORT ATLAS · 1901—2026</div>
+<div class="edge-type edge-type--r" aria-hidden="true">SEVEN PLACES · ONE PAUSE</div>
+
+<section class="hero" id="top">
+  <div class="hero__veil" aria-hidden="true"></div>
+  <div class="hero__inner">
+    <div class="hero__top">
+      <div class="mark">
+        <img class="mark__img" src="assets/sdu-mark.png" alt="山东大学校徽" width="320" height="320" />
+        <div class="mark__txt">
+          <b>山东大学</b>
+          <span>SHANDONG UNIVERSITY</span>
+        </div>
+      </div>
+      <div class="hero__kicker">CAMPUS COMFORT ATLAS <i></i> 非官方观察</div>
+      <div class="hero__issue">NO. 01 <span>/</span> 2026</div>
+    </div>
+
+    <div class="hero__copy">
+      <div class="hero__eyebrow"><span>给校园生活，找一个安心的暂停键</span><i></i></div>
+      <h1><span>山东大学</span><em>拉屎指南</em></h1>
+      <p class="hero__sub">从一扇门，到一片窗外的海。</p>
+      <p class="hero__intro">在早八、实验和晚课之间，身体也需要一个暂停键。我们从洪家楼的老木门出发，一路向东，把七个校区的角落画成一条可以走下去的路。</p>
+      <div class="hero__meta">
+        <span><b>07</b> 个地点</span>
+        <span><b>01</b> 份非官方指南</span>
+        <span>济南 · 青岛 · 威海</span>
+      </div>
+    </div>
+
+    <div class="hero__toc">
+      <div class="toc__label">CONTENTS <i></i></div>
+      <a class="toc__row" href="#chapter-1" data-goto="0">
+        <span class="toc__no">01</span>
+        <span class="toc__title">门一关，世界安静<small>洪家楼 · 中心校区</small></span>
+        <span class="toc__arrow">↗</span>
+      </a>
+      <a class="toc__row" href="#chapter-3" data-goto="2">
+        <span class="toc__no">02</span>
+        <span class="toc__title">把舒适落到实处<small>趵突泉 · 千佛山</small></span>
+        <span class="toc__arrow">↗</span>
+      </a>
+      <a class="toc__row" href="#chapter-5" data-goto="4">
+        <span class="toc__no">03</span>
+        <span class="toc__title">从转角，到更开阔的风景<small>兴隆山 · 青岛 · 威海</small></span>
+        <span class="toc__arrow">↗</span>
+      </a>
+    </div>
+
+    <div class="hero__foot">
+      <div class="scrollhint"><i></i><span>向下滚动，校园开始建造</span></div>
+      <div class="build-legend">
+        <b>BUILD SEQUENCE</b>
+        <ol>
+          <li>地基</li><li>墙体</li><li>楼板</li><li>窗</li><li>屋顶</li><li>家具</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="hud" id="hud">
+  <div class="brand">
+    <img src="assets/sdu-mark.png" alt="" width="320" height="320" />
+    <div><b>山东大学</b><span>校园舒适指南 · 非官方</span></div>
+  </div>
+  <nav class="rail" aria-label="章节导航">
+    <a href="#chapter-1" data-goto="0"><b>01</b><span>洪家楼</span></a>
+    <a href="#chapter-2" data-goto="1"><b>02</b><span>中心校区</span></a>
+    <a href="#chapter-3" data-goto="2"><b>03</b><span>趵突泉</span></a>
+    <a href="#chapter-4" data-goto="3"><b>04</b><span>千佛山</span></a>
+    <a href="#chapter-5" data-goto="4"><b>05</b><span>兴隆山</span></a>
+    <a href="#chapter-6" data-goto="5"><b>06</b><span>青岛</span></a>
+    <a href="#chapter-7" data-goto="6"><b>07</b><span>威海</span></a>
+  </nav>
+  <div class="status">
+    <div class="status__eyebrow"><i></i><span id="status-kicker">BUILDING ON SCROLL</span></div>
+    <div class="status__title" id="status-title">校园正在建造</div>
+    <div class="status__bar"><i id="status-fill"></i></div>
+  </div>
+  <div class="progress">
+    <span>01</span><i class="progress__line"><b id="progress-fill"></b><em id="progress-dot"></em></i><span>07</span>
+    <small id="progress-num">000%</small>
+  </div>
+  <div class="hint-returntop"><a href="#top" data-top>TOP ↑</a></div>
+</div>
+
+<main class="track" id="track">
+  <div class="cards" id="cards">
+    <article class="card card--left" data-chapter="0" id="chapter-1" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">01</span><span class="card__cat">老校区的木门</span><span class="card__tag">洪家楼校区</span></div>
+      <h2>三号楼<small>洪家楼校区</small></h2>
+      <p class="lead">门一关，走廊的声音就退到门外。</p>
+      <p class="body">水磨石地面、老式木窗，光从高窗斜下来。隔间不多，课间前后要排队；以坐便为主，进门先看一眼哪间空着。教堂的钟声隔着窗传来，是一天里最安静的几分钟。</p>
+      <div class="specs">
+        <div><span>坐便</span><b>为主</b></div>
+        <div><span>隔间</span><b>不多</b></div>
+        <div><span>高峰</span><b>课间</b></div>
+      </div>
+      <div class="chips"><span>木门 · 安静</span><span>坐便为主</span><span>课间高峰</span></div>
+      <p class="tip"><b>顺手一提</b>老楼的木门重，关门前先扶一下，别让回声替你打招呼。</p>
+    </article>
+
+    <article class="card card--right" data-chapter="1" id="chapter-2" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">02</span><span class="card__cat">高层的一站</span><span class="card__tag">中心校区</span></div>
+      <h2>知新楼<small>中心校区</small></h2>
+      <p class="lead">先分清 A、B、C、D 座，再谈从容。</p>
+      <p class="body">四座楼体在中庭里彼此相望，钟塔到点会放曲子。高层卫生间视野开阔，电梯高峰要等；进楼先看楼层导引，别在连廊里绕圈。靠窗的位置，能看见稷下广场的树冠。</p>
+      <div class="specs">
+        <div><span>楼层</span><b>高层</b></div>
+        <div><span>电梯</span><b>高峰</b></div>
+        <div><span>认座</span><b>必须</b></div>
+      </div>
+      <div class="chips"><span>高层视野</span><span>先认座</span><span>电梯高峰</span></div>
+      <p class="tip"><b>顺手一提</b>赶时间就走低层，想安静就往高处多坐几层电梯。</p>
+    </article>
+
+    <article class="card card--left" data-chapter="2" id="chapter-3" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">03</span><span class="card__cat">空间感选手</span><span class="card__tag">趵突泉校区</span></div>
+      <h2>综合楼<small>趵突泉校区</small></h2>
+      <p class="lead">转身，从容一点；空间，再宽敞一点。</p>
+      <p class="body">医学部的老楼群，走廊宽、隔间多，蹲厕坐便都有得选。部分楼层能望见院子里的老槐树。校友门下走过，脚步自然就慢了；进门之前，先抬头看一眼那块匾。</p>
+      <div class="specs">
+        <div><span>蹲坐</span><b>都有</b></div>
+        <div><span>空间</span><b>宽敞</b></div>
+        <div><span>景观</span><b>老槐</b></div>
+      </div>
+      <div class="chips"><span>蹲坐可选</span><span>空间宽敞</span><span>老槐树</span></div>
+      <p class="tip"><b>顺手一提</b>按膝盖和心情投票；无障碍隔间，留给真正需要的人。</p>
+    </article>
+
+    <article class="card card--right" data-chapter="3" id="chapter-4" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">04</span><span class="card__cat">夏天的那口凉气</span><span class="card__tag">千佛山校区</span></div>
+      <h2>教学主楼<small>千佛山校区</small></h2>
+      <p class="lead">酷暑里的这口凉气，很容易让人记住。</p>
+      <p class="body">空调是加分项，普通蹲位走实用路线，适合就近解决内急。窗外就是千佛山的轮廓，下午的光落在水磨石上。楼层不高，走楼梯有时比等电梯快。</p>
+      <div class="specs">
+        <div><span>空调</span><b>有</b></div>
+        <div><span>蹲位</span><b>实用</b></div>
+        <div><span>无障碍</span><b>优先</b></div>
+      </div>
+      <div class="chips"><span>夏日清凉</span><span>实用优先</span><span>无障碍</span></div>
+      <p class="tip"><b>顺手一提</b>夏天进门先别急着关门，让穿堂风过一下。</p>
+    </article>
+
+    <article class="card card--left" data-chapter="4" id="chapter-5" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">05</span><span class="card__cat">山就在窗外</span><span class="card__tag">兴隆山校区</span></div>
+      <h2>图书馆<small>兴隆山校区</small></h2>
+      <p class="lead">抬头是山，低头是台阶。</p>
+      <p class="body">图书馆三角形的中庭把光收进来，靠窗的位置能看见兴隆山的轮廓。坡地校区楼层多，先确认自己在哪一层再动身；从西门进，拾级而上。</p>
+      <div class="specs">
+        <div><span>楼层</span><b>坡地</b></div>
+        <div><span>闭馆</span><b>前高峰</b></div>
+        <div><span>景观</span><b>山</b></div>
+      </div>
+      <div class="chips"><span>山景</span><span>先认层</span><span>坡地</span></div>
+      <p class="tip"><b>顺手一提</b>闭馆前半小时是高峰，提前一点，少排一会儿。</p>
+    </article>
+
+    <article class="card card--left" data-chapter="5" id="chapter-6" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">06</span><span class="card__cat">海风路过的地方</span><span class="card__tag">青岛校区</span></div>
+      <h2>图书馆<small>青岛校区</small></h2>
+      <p class="lead">一眼海面，让心情舒展开来。</p>
+      <p class="body">滨海校区风大，窗边先留意遮挡与隐私。新楼的管道和水压都稳，具体开放范围看现场指引。日落前后人少，光线也最好。</p>
+      <div class="specs">
+        <div><span>海景</span><b>有</b></div>
+        <div><span>风</span><b>大</b></div>
+        <div><span>设施</span><b>新</b></div>
+      </div>
+      <div class="chips"><span>海景</span><span>新设施</span><span>留意窗边</span></div>
+      <p class="tip"><b>顺手一提</b>风大的日子，别把纸巾放在窗台上。</p>
+    </article>
+
+    <article class="card card--left" data-chapter="6" id="chapter-7" aria-hidden="true">
+      <div class="card__meta"><span class="card__no">07</span><span class="card__cat">把匆忙暂时放下</span><span class="card__tag">威海校区</span></div>
+      <h2>玛珈山下<small>威海校区</small></h2>
+      <p class="lead">山与海之间，步子自然会慢一点。</p>
+      <p class="body">玛珈山下的老校区，楼层不高，树很多。图书馆闭馆时间比本部早，出门前记得看一眼表。海风从操场那边吹过来，走回宿舍的路也不着急。</p>
+      <div class="specs">
+        <div><span>闭馆</span><b>较早</b></div>
+        <div><span>树荫</span><b>多</b></div>
+        <div><span>山海</span><b>之间</b></div>
+      </div>
+      <div class="chips"><span>山海之间</span><span>看闭馆时间</span><span>树荫</span></div>
+      <p class="tip"><b>顺手一提</b>晚课前留十分钟，别把从容走成小跑。</p>
+    </article>
+  </div>
+</main>
+
+<section class="outro" id="outro">
+  <div class="outro__inner">
+    <div class="outro__eyebrow"><span>THE LAST DOOR</span><i></i><span>07 / 07</span></div>
+
+    <div class="emergency">
+      <div class="emergency__head">
+        <span class="mini-label">QUICK PICK · 快速选择</span>
+        <h2>真的急了，怎么选？</h2>
+        <p>把复杂留给平时，把简单留给现在。</p>
+      </div>
+      <div class="emergency__rows">
+        <div class="erow"><span>最近</span><p>任意教学楼低层。先解决，再讲究。</p></div>
+        <div class="erow"><span>最安静</span><p>洪家楼的老楼，或图书馆闭馆前。</p></div>
+        <div class="erow"><span>最宽敞</span><p>趵突泉综合楼，蹲坐都有得选。</p></div>
+        <div class="erow"><span>最好看</span><p>青岛与威海，海风会替你翻篇。</p></div>
+        <div class="erow"><span>最稳</span><p>中心校区知新楼，先认座再上楼。</p></div>
+      </div>
+      <div class="emergency__foot"><span>优先使用无障碍隔间</span><span>为真正需要的人留一扇门</span></div>
+    </div>
+
+    <div class="closing">
+      <p class="closing__quote">“最好的那一间，<br />往往是你已经熟悉的那一间。”</p>
+      <p class="closing__body">这不是一份官方地图，也不是实时导航。它只是把一些被反复走过的门、走廊和窗，认真地记了下来。设施、开放时间与位置，请以现场指引为准。愿每一次，都从容。</p>
+      <div class="closing__actions">
+        <a href="#top" data-top class="replay">重新走一遍 <span>↖</span></a>
+        <a href="#chapter-1" data-goto="0" class="ghostlink">回看路线</a>
+      </div>
+    </div>
+
+    <div class="outro__foot">
+      <div class="outro__brand">
+        <img src="assets/sdu-mark.png" alt="" width="320" height="320" />
+        <div><b>山东大学</b><span>校园舒适指南 · 非官方</span></div>
+      </div>
+      <div class="outro__meta">济南 / 青岛 / 威海<br />2026 · SDU</div>
+      <div class="colophon">CAMPUS COMFORT ATLAS<br />MADE WITH CARE, NOT AUTHORITY.</div>
+    </div>
+  </div>
+</section>
+
+<div id="error-box" role="alert"></div>
+<script src="app.js"></script>
+</body>
+</html>

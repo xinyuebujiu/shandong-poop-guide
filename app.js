@@ -275,36 +275,50 @@
       id: 'hongjialou', campus: '洪家楼校区', short: '洪家楼', theme: 'brick',
       landmark: 'church', label: ['洪家楼天主教堂', 'HONGJIALOU CATHEDRAL'],
       landmarkOff: [9, -13], labelOff: [-150, -196], pavW: 15, pavD: 12, zoom: 0.90,
+      fit: { stalls: 2, stallSide: 'left', sinkSide: 'right', floor: 'wood', panel: 'wainscot',
+        upper: 'nook', extras: ['radiator', 'hooks', 'mop', 'notice'] },
     },
     {
       id: 'zhixin', campus: '中心校区', short: '中心', theme: 'tower',
       landmark: 'zhixin', label: ['知新楼', 'ZHIXIN TOWER · 139.1M'],
-      landmarkOff: [2, -9], labelOff: [146, -172], pavW: 15, pavD: 12, zoom: 0.78, focusY: 14,
+      landmarkOff: [-1, -9], labelOff: [146, -172], pavW: 15, pavD: 12, zoom: 0.78, focusY: 14,
+      fit: { stalls: 4, stallSide: 'right', sinkSide: 'left', floor: 'terrazzo', panel: 'tile',
+        upper: 'pantry', extras: ['urinal', 'dryer', 'vending', 'glass'] },
     },
     {
       id: 'baotuquan', campus: '趵突泉校区', short: '趵突泉', theme: 'gate',
       landmark: 'gate', label: ['校友门', 'ALUMNI GATE · 1924'],
       landmarkOff: [22, -10], labelOff: [80, -132], pavW: 15, pavD: 12, zoom: 0.90, tx: -0.025,
+      fit: { stalls: 2, stallSide: 'right', sinkSide: 'left', floor: 'tile', panel: 'tile',
+        upper: 'rest', extras: ['accessible', 'grab', 'poster', 'cabinet'] },
     },
     {
       id: 'qianfoshan', campus: '千佛山校区', short: '千佛山', theme: 'hill',
       landmark: 'hall', label: ['千佛山', 'QIANFOSHAN'],
-      landmarkOff: [1, -22], labelOff: [120, -190], pavW: 15, pavD: 12, zoom: 0.82, focusY: 15,
+      landmarkOff: [-5, -22], labelOff: [120, -190], pavW: 15, pavD: 12, zoom: 0.82, focusY: 15,
+      fit: { stalls: 3, stallSide: 'left', sinkSide: 'right', floor: 'terrazzo', panel: 'board',
+        upper: 'study', extras: ['trough', 'mop', 'umbrella', 'ac', 'notice'] },
     },
     {
       id: 'xinglongshan', campus: '兴隆山校区', short: '兴隆山', theme: 'valley',
       landmark: 'tri', label: ['兴隆山图书馆', 'XINGLONGSHAN LIBRARY'],
       landmarkOff: [0, -21], labelOff: [150, -190], pavW: 15, pavD: 12, zoom: 0.88, tx: 0.015,
+      fit: { stalls: 2, stallSide: 'right', sinkSide: 'left', floor: 'wood', panel: 'shelf',
+        upper: 'carrel', extras: ['bookcart', 'desk', 'water'] },
     },
     {
       id: 'qingdao', campus: '青岛校区', short: '青岛', theme: 'coast',
       landmark: 'qingdao', label: ['黄海 · 青岛校区', 'YELLOW SEA'],
       landmarkOff: [0, -23], labelOff: [158, -150], pavW: 15, pavD: 12, zoom: 0.94, cardSide: 'left', tx: 0.04,
+      fit: { stalls: 3, stallSide: 'left', sinkSide: 'right', floor: 'stone', panel: 'tile',
+        upper: 'windowBench', extras: ['privacy', 'mat', 'hooks', 'poster'] },
     },
     {
       id: 'weihai', campus: '威海校区', short: '威海', theme: 'sea',
       landmark: 'weihai', label: ['玛珈山 · 威海', 'MAJIASHAN'],
       landmarkOff: [-4, -22], labelOff: [-160, -158], pavW: 15, pavD: 12, zoom: 0.96,
+      fit: { stalls: 2, stallSide: 'right', sinkSide: 'left', floor: 'wood', panel: 'wainscot',
+        upper: 'tea', extras: ['tea', 'photo', 'umbrella', 'bin'] },
     },
   ];
 
@@ -315,7 +329,7 @@
     const near = route.closest(bend[0], bend[1]);
     const anchor = route.at(near.d);
     const side = i % 2 === 0 ? 1 : -1;
-    const pav = { x: anchor.x + side * 11, z: anchor.z - side * 11 };
+    const pav = { x: anchor.x + side * 14.5, z: anchor.z - side * 14.5 };
     const theme = THEMES[def.theme];
     const ch = {
       ...def,
@@ -328,8 +342,8 @@
       lz: pav.z + def.landmarkOff[1],
       theme,
       cardSide: def.cardSide || (i % 2 === 0 ? 'left' : 'right'),
-      buildStart: near.d - 20,
-      buildEnd: near.d - 3,
+      buildStart: near.d - 22,
+      buildEnd: near.d + 1,
       landmarkStart: near.d - 22,
       landmarkEnd: near.d - 4,
       labelAlpha: 0,
@@ -471,6 +485,28 @@
     ctx.save();
     if (opt.alpha != null) ctx.globalAlpha *= opt.alpha;
     if (opt.dy) ctx.translate(0, opt.dy);
+    if (opt.cut) {
+      // cut-away roof: keep the ridge, gable ends and exposed rafters,
+      // remove the front slope so the upper room stays visible
+      poly([proj(x0, z0, yEave), proj(x0, z1, yEave), proj(x0, zc, yRidge)], shade(base, -0.24), shade(base, -0.4), 0.6);
+      poly([proj(x1, z0, yEave), proj(x1, z1, yEave), proj(x1, zc, yRidge)], shade(base, -0.2), shade(base, -0.36), 0.6);
+      poly([proj(x0, z1, yEave + 0.18), proj(x1, z1, yEave + 0.18), proj(x1, z1, yEave), proj(x0, z1, yEave)], shade(base, -0.3), shade(base, -0.45), 0.5);
+      ctx.save(); ctx.globalAlpha *= 0.8;
+      ctx.strokeStyle = shade(base, -0.18); ctx.lineWidth = 0.9;
+      for (let i = 0; i <= 6; i++) {
+        const xx = lerp(x0, x1, i / 6);
+        const a = proj(xx, z1, yEave + 0.18), b = proj(xx, zc, yRidge);
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+      ctx.restore();
+      // thin back slope, half transparent so it reads as a roof section
+      poly([proj(x0, z0, yEave), proj(x1, z0, yEave), proj(x1, zc, yRidge), proj(x0, zc, yRidge)], base, shade(base, -0.3), 0.6, 0.32);
+      const r1 = proj(x0, zc, yRidge), r2 = proj(x1, zc, yRidge);
+      ctx.strokeStyle = shade(base, 0.18); ctx.lineWidth = 2.2;
+      ctx.beginPath(); ctx.moveTo(r1.x, r1.y); ctx.lineTo(r2.x, r2.y); ctx.stroke();
+      ctx.restore();
+      return;
+    }
     // gable ends
     poly([proj(x0, z0, yEave), proj(x0, z1, yEave), proj(x0, zc, yRidge)], shade(base, -0.24), shade(base, -0.4), 0.6);
     // front slope
@@ -1149,7 +1185,7 @@
     ctx.restore();
   }
 
-  function sinkCounter(x, z, alpha, theme) {
+  function sinkCounter(x, z, alpha, theme, mirrorX) {
     if (alpha <= 0.01) return;
     ctx.save(); ctx.globalAlpha *= alpha;
     drawBox(x, z, 1.9, 3.4, 0.4, 1.75, matte('#E8DFCE'), { lw: 0.5 });
@@ -1166,8 +1202,8 @@
       ctx.strokeStyle = '#7B8A8E'; ctx.lineWidth = 1.2;
       ctx.beginPath(); ctx.moveTo(f.x, f.y + 4); ctx.lineTo(f.x, f.y - 3); ctx.lineTo(f.x + 5, f.y - 2); ctx.stroke();
     }
-    // mirror on left wall (wall face is 0.75 units behind the counter)
-    const wx = x - 0.77;
+    // mirror on the side wall (wall face is 0.75 units behind the counter)
+    const wx = mirrorX == null ? x - 0.77 : mirrorX;
     wallQuadX(wx - 0.01, z + 0.4, z + 3.0, 2.25, 3.55, 'rgba(80,96,104,.28)', 'rgba(70,60,45,.3)', 1);
     wallQuadX(wx - 0.02, z + 0.5, z + 2.9, 2.33, 3.47, 'rgba(206,222,220,.55)', null, 1);
     wallLineX(wx - 0.03, z + 0.5, z + 2.9, 2.9, 'rgba(255,255,255,.4)', 1.2, 0.8);
@@ -1227,6 +1263,258 @@
     ctx.restore();
   }
 
+  /* ---------------- interior fit-out ---------------- */
+  function wallFinish(x0, x1, z0, zS, th, panel, alpha) {
+    if (alpha <= 0.01) return;
+    const wx = z0 + 0.665;
+    ctx.save(); ctx.globalAlpha *= alpha;
+    if (panel === 'wainscot') {
+      wallQuadZ(wx, x0 + 0.8, x1 - 0.8, 0.55, 2.35, shade(th.trim, 0.28), 'rgba(92,70,48,.25)', 1);
+      for (let xx = x0 + 1.1; xx < x1 - 1; xx += 0.62) wallLineZ(wx + 0.004, xx, xx, 0.7, 2.2, 'rgba(70,52,36,.28)', 0.45, 1);
+      wallLineZ(wx + 0.006, x0 + 0.85, x1 - 0.85, 2.35, 'rgba(70,52,36,.35)', 0.7, 1);
+    } else if (panel === 'tile') {
+      wallQuadZ(wx, x0 + 0.8, x1 - 0.8, 0.55, 3.15, 'rgba(249,246,238,.55)', null, 1);
+      ctx.strokeStyle = 'rgba(115,135,138,.24)'; ctx.lineWidth = 0.4;
+      for (let xx = x0 + 1.2; xx < x1 - 0.8; xx += 1.0) wallLineZ(wx + 0.004, xx, xx, 0.6, 3.1, 'rgba(115,135,138,.24)', 0.4, 1);
+      for (let yy = 1.05; yy < 3.1; yy += 0.65) wallLineZ(wx + 0.004, x0 + 0.85, x1 - 0.85, yy, 'rgba(115,135,138,.24)', 0.4, 1);
+    } else if (panel === 'board') {
+      wallQuadZ(wx, x0 + 2.0, x1 - 3.6, 1.3, 3.25, 'rgba(198,160,112,.55)', 'rgba(100,74,44,.45)', 1);
+      const notes = [['#F4EBDD', 0.35, 0.4], ['#D9E4DC', 0.7, 0.55], ['#E9D9C4', 0.45, 0.66]];
+      for (const n of notes) {
+        const p = proj(x0 + 2.0 + (x1 - x0 - 5.6) * n[1], wx + 0.01, 2.0 + n[2]);
+        ctx.fillStyle = n[0]; ctx.fillRect(p.x - 8, p.y - 10, 16, 13);
+      }
+    } else if (panel === 'shelf') {
+      bookshelf(x0 + 3.3, z0 + 0.75, 1);
+      drawBox(x0 + 6.2, z0 + 0.7, 2.2, 0.5, 0.2, 2.6, matte('#937857'), { lw: 0.5 });
+      for (let i = 0; i < 6; i++) {
+        const p = proj(x0 + 6.4 + (i % 3) * 0.65, z0 + 0.94, 0.7 + Math.floor(i / 3) * 0.9);
+        ctx.fillStyle = ['#8E2A24', '#3F6273', '#B48A5C', '#7C8A76'][i % 4];
+        ctx.fillRect(p.x - 2, p.y - 7, 3.4, 7);
+      }
+    } else if (panel === 'stone') {
+      wallQuadZ(wx, x0 + 0.8, x1 - 0.8, 0.55, 3.2, 'rgba(230,222,206,.38)', null, 1);
+      for (let yy = 1.0; yy < 3.2; yy += 0.72) wallLineZ(wx + 0.004, x0 + 0.85, x1 - 0.85, yy, 'rgba(120,108,86,.22)', 0.45, 1);
+      for (let xx = x0 + 1.8; xx < x1 - 0.8; xx += 1.8) wallLineZ(wx + 0.004, xx, xx, 0.6, 3.2, 'rgba(120,108,86,.2)', 0.4, 1);
+    }
+    ctx.restore();
+  }
+
+  function fitExtras(ch, x0, x1, z0, z1, zS, alpha, th, now) {
+    if (alpha <= 0.01) return;
+    const ex = ch.fit.extras || [];
+    const has = (k) => ex.indexOf(k) >= 0;
+    ctx.save(); ctx.globalAlpha *= alpha;
+    if (has('radiator')) {
+      drawBox(x0 + 0.85, z0 + 2.4, 0.42, 2.6, 0.6, 1.55, matte('#E3D8C4'), { lw: 0.4 });
+      for (let i = 0; i < 7; i++) wallLineZ(z0 + 0.69, x0 + 1.55 + i * 0.3, x0 + 1.55 + i * 0.3, 0.65, 1.5, 'rgba(120,105,80,.28)', 0.35, 1);
+    }
+    if (has('hooks')) {
+      wallLineZ(z0 + 0.67, x0 + 5.9, x0 + 7.3, 2.35, 'rgba(90,72,50,.55)', 1.3, 1);
+      for (let i = 0; i < 3; i++) {
+        const p = proj(x0 + 6.1 + i * 0.45, z0 + 0.67, 2.35);
+        ctx.fillStyle = '#7A6750'; ctx.beginPath(); ctx.arc(p.x, p.y, 1.4, 0, TAU); ctx.fill();
+      }
+      const c = proj(x0 + 6.55, z0 + 0.68, 1.95);
+      ctx.fillStyle = th.accent;
+      ctx.beginPath(); ctx.moveTo(c.x - 7, c.y - 12); ctx.lineTo(c.x + 7, c.y - 12); ctx.lineTo(c.x + 9, c.y + 8); ctx.lineTo(c.x - 9, c.y + 8); ctx.closePath(); ctx.fill();
+    }
+    if (has('mop')) {
+      drawBox(x0 + 1.2, z1 - 1.55, 0.95, 0.95, 0.55, 1.25, matte('#C9C1AF'), { lw: 0.45 });
+      const p = proj(x0 + 1.65, z1 - 1.1, 1.25);
+      ctx.strokeStyle = '#8C806C'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 7, p.y - 23); ctx.stroke();
+      ctx.fillStyle = '#D8D2C4'; ctx.beginPath(); ctx.arc(p.x + 7, p.y - 23, 4, 0, TAU); ctx.fill();
+    }
+    if (has('notice')) {
+      wallQuadZ(zS + 0.33, x0 + 5.0, x0 + 7.2, 1.65, 3.0, 'rgba(246,240,226,.96)', 'rgba(110,92,68,.45)', 1);
+      wallQuadZ(zS + 0.34, x0 + 5.1, x0 + 7.1, 2.55, 2.85, th.accent, null, 1);
+      for (let i = 0; i < 3; i++) wallLineZ(zS + 0.35, x0 + 5.3, x0 + 6.9, 2.3 - i * 0.22, 'rgba(110,95,70,.32)', 0.45, 1);
+    }
+    if (has('urinal')) {
+      for (let i = 0; i < 2; i++) {
+        const ux = x0 + 2.1 + i * 1.3;
+        drawBox(ux, z0 + 0.72, 0.72, 0.45, 1.25, 2.45, matte('#F4F0E6'), { lw: 0.45 });
+        const p = proj(ux + 0.36, z0 + 1.18, 1.85);
+        ctx.fillStyle = 'rgba(180,198,194,.75)';
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 4.2, 5.2, 0, 0, TAU); ctx.fill();
+      }
+    }
+    if (has('vending')) {
+      drawBox(x1 - 2.15, z0 + 1.0, 1.5, 0.9, 0.55, 3.1, matte('#E9E1D1'), { lw: 0.5 });
+      wallQuadZ(z0 + 1.92, x1 - 2.0, x1 - 0.8, 1.3, 2.85, 'rgba(102,132,140,.62)', 'rgba(80,70,55,.3)', 1);
+      for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) {
+        const p = proj(x1 - 1.9 + c * 0.4, z0 + 1.93, 2.55 - r * 0.42);
+        ctx.fillStyle = ['#C4643F', '#D9B56A', '#7C8A76'][(r + c) % 3];
+        ctx.fillRect(p.x - 2, p.y - 2, 4, 5);
+      }
+    }
+    if (has('glass')) {
+      wallQuadX(x0 + 5.7, z0 + 1.2, zS - 0.6, 0.55, 3.2, 'rgba(206,224,222,.2)', 'rgba(96,124,126,.35)', 1);
+      wallLineX(x0 + 5.7, z0 + 1.2, zS - 0.6, 1.85, 'rgba(96,124,126,.28)', 0.6, 1);
+    }
+    if (has('accessible')) {
+      wallLineZ(zS + 0.36, x0 + 0.5, x0 + 1.9, 1.35, '#C9B37D', 1.5, 1);
+      wallLineX(x0 + 0.7, zS + 0.2, zS + 1.2, 1.35, '#C9B37D', 1.5, 1);
+      const p = proj(x0 + 1.2, zS + 0.38, 2.55);
+      ctx.fillStyle = '#3F6273'; ctx.fillRect(p.x - 7, p.y - 6, 14, 12);
+      ctx.fillStyle = '#F7F2E7'; ctx.font = '700 7px "PingFang SC",sans-serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('无障碍', p.x, p.y);
+    }
+    if (has('grab')) {
+      wallLineZ(z0 + 0.67, x0 + 0.9, x1 - 1.0, 1.2, '#C9B37D', 1.4, 1);
+      wallLineX(x0 + 0.67, z0 + 0.9, zS - 0.4, 1.2, '#C9B37D', 1.2, 1);
+    }
+    if (has('poster')) {
+      wallQuadZ(zS + 0.33, x1 - 5.4, x1 - 3.9, 1.7, 3.2, 'rgba(248,242,230,.95)', 'rgba(120,105,84,.4)', 1);
+      wallQuadZ(zS + 0.34, x1 - 5.4, x1 - 3.9, 2.85, 3.1, th.accent, null, 1);
+      const p = proj(x1 - 4.65, zS + 0.35, 2.35);
+      ctx.strokeStyle = 'rgba(90,110,118,.45)'; ctx.lineWidth = 0.6;
+      ctx.beginPath(); ctx.moveTo(p.x - 14, p.y + 6); ctx.lineTo(p.x - 2, p.y - 5); ctx.lineTo(p.x + 12, p.y + 2); ctx.stroke();
+    }
+    if (has('cabinet')) {
+      drawBox(x1 - 3.0, z0 + 2.0, 2.1, 0.65, 0.55, 1.75, matte('#DDD2BE'), { lw: 0.45 });
+      for (let i = 0; i < 3; i++) {
+        const p = proj(x1 - 2.85 + i * 0.62, z0 + 2.66, 1.55);
+        ctx.fillStyle = '#B6A88F'; ctx.fillRect(p.x - 1, p.y - 1, 2, 2);
+      }
+    }
+    if (has('umbrella')) {
+      drawBox(x0 + 0.4, z1 - 2.0, 0.55, 0.55, 0.55, 1.7, matte('#B9AE98'), { lw: 0.4 });
+      for (let i = 0; i < 3; i++) {
+        const p = proj(x0 + 0.67, z1 - 1.72, 1.7);
+        ctx.strokeStyle = ['#8E2A24', '#3F6273', '#7C8A76'][i]; ctx.lineWidth = 1.3;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 4 + i * 2, p.y - 18 - i * 2); ctx.stroke();
+        ctx.beginPath(); ctx.arc(p.x + 4 + i * 2, p.y - 18 - i * 2, 3.2, 0, TAU); ctx.stroke();
+      }
+    }
+    if (has('ac')) {
+      drawBox(x0 + 0.85, z0 + 4.4, 0.45, 2.0, 3.2, 4.1, matte('#EDE7DA'), { lw: 0.45 });
+      for (let i = 0; i < 4; i++) wallLineZ(z0 + 0.68, x0 + 1.5, x0 + 1.5, 3.4 + i * 0.14, 3.4 + i * 0.14, 'rgba(110,120,120,.35)', 0.4, 1);
+    }
+    if (has('bookcart')) {
+      drawBox(x1 - 2.5, z1 - 2.3, 1.8, 0.8, 0.55, 1.35, matte('#8C7452'), { lw: 0.45 });
+      for (let i = 0; i < 5; i++) {
+        const p = proj(x1 - 2.35 + i * 0.32, z1 - 1.85, 1.55);
+        ctx.fillStyle = ['#8E2A24', '#3F6273', '#C49A6C'][i % 3]; ctx.fillRect(p.x - 2, p.y - 8, 3.6, 8);
+      }
+    }
+    if (has('water')) {
+      drawBox(x1 - 1.6, z0 + 2.9, 0.65, 0.65, 0.55, 2.4, matte('#E6DECD'), { lw: 0.45 });
+      const p = proj(x1 - 1.27, z0 + 3.22, 2.55);
+      ctx.fillStyle = 'rgba(120,170,190,.55)'; ctx.beginPath(); ctx.ellipse(p.x, p.y, 4.5, 6, 0, 0, TAU); ctx.fill();
+    }
+    if (has('desk')) {
+      drawBox(x0 + 3.4, z0 + 2.4, 2.6, 0.9, 1.15, 1.35, matte('#C5AD87'), { lw: 0.45 });
+      drawBox(x0 + 3.55, z0 + 2.55, 2.3, 0.6, 0.55, 1.15, matte('#A78F6B'), { lw: 0.3 });
+      const p = proj(x0 + 4.7, z0 + 2.85, 1.6);
+      ctx.strokeStyle = '#5C6B63'; ctx.lineWidth = 1.2;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 13); ctx.lineTo(p.x + 6, p.y - 10); ctx.stroke();
+      ctx.fillStyle = '#E8D9B8'; ctx.beginPath(); ctx.moveTo(p.x + 3, p.y - 13); ctx.lineTo(p.x + 9, p.y - 15); ctx.lineTo(p.x + 10, p.y - 10); ctx.closePath(); ctx.fill();
+    }
+    if (has('tea')) {
+      drawBox(x1 - 3.2, z0 + 1.9, 2.3, 0.75, 0.55, 1.6, matte('#B9946A'), { lw: 0.45 });
+      drawBox(x1 - 3.05, z0 + 2.0, 2.0, 0.55, 1.6, 1.72, matte('#D8C09A'), { lw: 0.3 });
+      const k = proj(x1 - 2.0, z0 + 2.3, 1.95);
+      ctx.fillStyle = '#3F6273'; ctx.beginPath(); ctx.ellipse(k.x, k.y, 3.4, 2.5, 0, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#F7F2E7'; ctx.beginPath(); ctx.ellipse(k.x, k.y - 5, 2.2, 1.2, 0, 0, TAU); ctx.fill();
+      for (let i = 0; i < 3; i++) {
+        const c = proj(x1 - 3.0 + i * 0.4, z0 + 2.9, 1.82);
+        ctx.fillStyle = '#F7F2E7'; ctx.beginPath(); ctx.ellipse(c.x, c.y, 1.7, 1.1, 0, 0, TAU); ctx.fill();
+      }
+    }
+    if (has('photo')) {
+      wallQuadZ(z0 + 0.67, x0 + 4.0, x0 + 5.8, 2.0, 3.0, '#E9E1D0', 'rgba(90,76,56,.45)', 1);
+      const p = proj(x0 + 4.9, z0 + 0.68, 2.5);
+      ctx.fillStyle = '#A9C4C2'; ctx.fillRect(p.x - 11, p.y - 8, 22, 15);
+      ctx.fillStyle = '#7F9E92';
+      ctx.beginPath(); ctx.moveTo(p.x - 11, p.y + 7); ctx.lineTo(p.x - 4, p.y - 1); ctx.lineTo(p.x + 1, p.y + 3); ctx.lineTo(p.x + 6, p.y - 4); ctx.lineTo(p.x + 11, p.y + 7); ctx.closePath(); ctx.fill();
+    }
+    if (has('bin')) {
+      drawBox(x1 - 1.15, z1 - 1.7, 0.55, 0.55, 0.55, 1.1, matte('#B5AA95'), { lw: 0.4 });
+    }
+    ctx.restore();
+  }
+
+  function upperFit(ch, x0, x1, z0, zS, UP, alpha, th) {
+    if (alpha <= 0.01) return;
+    const style = ch.fit.upper;
+    const cx = (x0 + x1) / 2;
+    ctx.save(); ctx.globalAlpha *= alpha;
+    if (style === 'pantry') {
+      drawBox(x0 + 1.4, z0 + 0.8, 5.2, 0.8, UP + 0.42, UP + 1.45, matte('#D8CDB9'), { lw: 0.45 });
+      drawBox(x0 + 1.55, z0 + 0.9, 4.9, 0.62, UP + 1.45, UP + 1.55, matte('#EFE8DA'), { lw: 0.3 });
+      drawBox(x0 + 5.3, z0 + 0.85, 1.0, 0.6, UP + 1.55, UP + 2.1, matte('#7C8A86'), { lw: 0.35 });
+      drawBox(x1 - 2.4, z0 + 1.1, 1.0, 0.6, UP + 0.42, UP + 1.9, matte('#E8E0CF'), { lw: 0.35 });
+      for (let i = 0; i < 2; i++) {
+        const sx = x0 + 2.3 + i * 1.8;
+        drawBox(sx, z0 + 2.35, 0.62, 0.62, UP + 0.42, UP + 1.25, matte('#A88E6A'), { lw: 0.35 });
+        drawBox(sx - 0.05, z0 + 2.28, 0.72, 0.18, UP + 1.0, UP + 1.85, matte('#B79D78'), { lw: 0.3 });
+      }
+    } else if (style === 'rest') {
+      drawBox(x0 + 2.6, z0 + 1.0, 3.4, 1.3, UP + 0.42, UP + 1.05, matte('#C7CFC8'), { lw: 0.4 });
+      drawBox(x0 + 2.6, z0 + 0.55, 3.4, 0.5, UP + 1.05, UP + 2.0, matte('#B8C4BC'), { lw: 0.4 });
+      drawBox(x0 + 5.8, z0 + 1.0, 0.85, 0.85, UP + 0.42, UP + 1.7, matte('#D7C9AD'), { lw: 0.35 });
+      wallQuadZ(zS - 1.0, x0 + 1.0, x0 + 2.4, UP + 0.6, UP + 2.4, 'rgba(210,198,174,.5)', 'rgba(130,110,82,.35)', 1);
+      plant(x1 - 1.4, z0 + 2.2, 0.7, 1, 4.0);
+    } else if (style === 'study') {
+      for (let i = 0; i < 2; i++) {
+        const dx = x0 + 1.8 + i * 4.1;
+        drawBox(dx, z0 + 1.0, 2.8, 0.9, UP + 1.05, UP + 1.25, matte('#C7AE86'), { lw: 0.4 });
+        drawBox(dx + 0.1, z0 + 1.1, 0.15, 0.7, UP + 0.42, UP + 1.05, matte('#9C8462'), { lw: 0.3 });
+        drawBox(dx + 2.55, z0 + 1.1, 0.15, 0.7, UP + 0.42, UP + 1.05, matte('#9C8462'), { lw: 0.3 });
+        drawBox(dx + 1.0, z0 + 2.0, 0.55, 0.55, UP + 0.42, UP + 1.35, matte('#8C7658'), { lw: 0.3 });
+        const p = proj(dx + 1.45, z0 + 1.45, UP + 1.55);
+        ctx.strokeStyle = '#5C6B63'; ctx.lineWidth = 1.0;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 9); ctx.lineTo(p.x + 4, p.y - 7); ctx.stroke();
+        ctx.fillStyle = '#F0E4C4'; ctx.beginPath(); ctx.moveTo(p.x + 2, p.y - 9); ctx.lineTo(p.x + 7, p.y - 10); ctx.lineTo(p.x + 8, p.y - 6); ctx.closePath(); ctx.fill();
+      }
+    } else if (style === 'carrel') {
+      drawBox(x0 + 2.2, z0 + 0.9, 3.0, 0.9, UP + 1.05, UP + 1.25, matte('#BFA77F'), { lw: 0.4 });
+      drawBox(x0 + 2.4, z0 + 1.0, 0.15, 0.7, UP + 0.42, UP + 1.05, matte('#957E5C'), { lw: 0.3 });
+      drawBox(x0 + 4.9, z0 + 1.0, 0.15, 0.7, UP + 0.42, UP + 1.05, matte('#957E5C'), { lw: 0.3 });
+      drawBox(x0 + 3.1, z0 + 2.0, 0.6, 0.6, UP + 0.42, UP + 1.4, matte('#8C7658'), { lw: 0.3 });
+      drawBox(x0 + 6.6, z0 + 1.0, 0.9, 2.3, UP + 0.42, UP + 2.3, matte('#A58D68'), { lw: 0.4 });
+      for (let i = 0; i < 6; i++) {
+        const p = proj(x0 + 6.66, z0 + 1.2 + (i % 3) * 0.65, UP + 0.8 + Math.floor(i / 3) * 0.7);
+        ctx.fillStyle = ['#8E2A24', '#3F6273', '#C49A6C'][i % 3]; ctx.fillRect(p.x - 1, p.y - 6, 3, 6);
+      }
+    } else if (style === 'windowBench') {
+      drawBox(x0 + 1.2, z0 + 0.7, 5.6, 1.0, UP + 0.42, UP + 0.95, matte('#C6B28D'), { lw: 0.4 });
+      for (let i = 0; i < 3; i++) drawBox(x0 + 1.5 + i * 1.8, z0 + 0.76, 1.4, 0.85, UP + 0.95, UP + 1.15, matte(['#B9C9C2', '#D3BD9E', '#AFC2C6'][i]), { lw: 0.3 });
+      drawBox(x1 - 2.0, z0 + 1.2, 0.9, 0.9, UP + 0.42, UP + 1.65, matte('#A88E6A'), { lw: 0.35 });
+      const p = proj(x1 - 1.55, z0 + 1.65, UP + 1.95);
+      ctx.strokeStyle = '#5C6B63'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + 5, p.y - 10); ctx.stroke();
+      ctx.fillStyle = 'rgba(160,190,200,.6)'; ctx.beginPath(); ctx.arc(p.x + 7, p.y - 12, 4, 0, TAU); ctx.fill();
+    } else if (style === 'tea') {
+      drawBox(cx - 1.1, z0 + 1.3, 2.2, 1.1, UP + 0.42, UP + 1.0, matte('#B08F64'), { lw: 0.4 });
+      drawBox(cx - 0.9, z0 + 1.4, 1.8, 0.9, UP + 1.0, UP + 1.12, matte('#D7BE97'), { lw: 0.3 });
+      for (let i = 0; i < 2; i++) {
+        drawBox(cx - 2.6 + i * 5.0, z0 + 2.4, 0.9, 0.9, UP + 0.42, UP + 0.85, matte('#C9B08A'), { lw: 0.3 });
+        drawBox(cx - 2.55 + i * 5.0, z0 + 2.45, 0.8, 0.8, UP + 0.85, UP + 1.05, matte('#B39B78'), { lw: 0.3 });
+      }
+      const k = proj(cx, z0 + 1.85, UP + 1.35);
+      ctx.fillStyle = '#3F6273'; ctx.beginPath(); ctx.ellipse(k.x, k.y, 4.5, 3, 0, 0, TAU); ctx.fill();
+      ctx.fillStyle = '#F7F2E7'; ctx.beginPath(); ctx.ellipse(k.x, k.y - 5, 2.6, 1.4, 0, 0, TAU); ctx.fill();
+      for (let i = 0; i < 5; i++) {
+        const p = proj(x0 + 1.0 + i * 2.8, z0 + 0.7, UP + 2.25);
+        ctx.fillStyle = 'rgba(246,214,150,.85)'; ctx.beginPath(); ctx.arc(p.x, p.y, 2.2, 0, TAU); ctx.fill();
+      }
+    } else {
+      // attic nook: old chair, rug, stacked books
+      const rug = proj(cx, z0 + 2.2, UP + 0.44);
+      ctx.fillStyle = 'rgba(176,143,112,.48)';
+      ctx.beginPath(); ctx.ellipse(rug.x, rug.y, 4.2 * IX * view.scale, 1.7 * view.scale, 0, 0, TAU); ctx.fill();
+      couch(x0 + 2.0, z0 + 1.0, 1, th);
+      drawBox(x0 + 5.5, z0 + 1.0, 1.6, 0.9, UP + 0.42, UP + 1.55, matte('#9C7E58'), { lw: 0.45 });
+      for (let i = 0; i < 4; i++) {
+        const p = proj(x0 + 5.7 + (i % 2) * 0.5, z0 + 1.25, UP + 1.55 + Math.floor(i / 2) * 0.16);
+        ctx.fillStyle = ['#8E2A24', '#3F6273', '#C49A6C', '#7C8A76'][i]; ctx.fillRect(p.x - 5, p.y - 2, 10, 3);
+      }
+      plant(x0 + 7.0, z0 + 2.3, 0.65, 1, 3.2);
+    }
+    ctx.restore();
+  }
+
   /* ---------------- pavilion ---------------- */
   function drawPavilion(ch, now) {
     const p = ch.p;
@@ -1238,14 +1526,21 @@
     const zS = z0 + 4.8;
     const H0 = 8.8;
     const UP = 4.6;
-    const wallP = smooth(baseScale < 500 ? 0.08 : 0.10, 0.34, p);
-    const foundP = smooth(0, 0.14, p);
-    const floorP = smooth(0.26, 0.43, p);
-    const winP = smooth(0.40, 0.58, p);
-    const roofP = smooth(0.55, 0.76, p);
-    const furnP = smooth(0.48, 0.92, p);
-    const hgt = H0 * easeOut(wallP);
-    const lowH = 1.05 * easeOut(wallP);
+    const foundP = smooth(0, 0.10, p);
+    const gSlabP = smooth(0.08, 0.16, p);
+    const gWallP = smooth(0.14, 0.30, p);
+    const gWinP = smooth(0.28, 0.38, p);
+    const gFurnP = smooth(0.34, 0.52, p);
+    const uSlabP = smooth(0.52, 0.60, p);
+    const uWallP = smooth(0.58, 0.69, p);
+    const uWinP = smooth(0.66, 0.76, p);
+    const uFurnP = smooth(0.72, 0.84, p);
+    const roofP = smooth(0.84, 0.95, p);
+    const detailP = smooth(0.93, 1.0, p);
+    const hgt = H0;
+    const lowH = 1.05 * easeOut(gWallP);
+    const gH = 0.55 + (UP - 0.55) * easeOut(gWallP);
+    const uH = UP + (H0 - UP) * easeOut(uWallP);
 
     // shadow
     ctx.save();
@@ -1280,85 +1575,108 @@
       }
     }
 
-    // floor slab
-    if (floorP > 0) {
-      const fIn = 0.75 + 0.25 * easeOut(floorP);
-      drawBox(x0 + 0.2, z0 + 0.2, (W0 - 0.4) * fIn, (D0 - 0.4) * fIn, 0.55, 0.85, matte(th.floor, 0.10, -0.01, -0.12), { alpha: floorP });
-      // floor tile lines only on open courtyard
-      if (floorP > 0.7) {
+    // ground slab, lowered into place
+    if (gSlabP > 0) {
+      const fIn = 0.75 + 0.25 * easeOut(gSlabP);
+      const drop = (1 - easeOut(gSlabP)) * 2.4;
+      ctx.save();
+      ctx.translate(0, -drop * view.scale);
+      drawBox(x0 + 0.2, z0 + 0.2, (W0 - 0.4) * fIn, (D0 - 0.4) * fIn, 0.55, 0.85, matte(th.floor, 0.10, -0.01, -0.12), { alpha: gSlabP });
+      if (gSlabP > 0.55) {
         ctx.save();
-        ctx.globalAlpha *= (floorP - 0.7) / 0.3;
+        ctx.globalAlpha *= smooth(0.55, 0.95, gSlabP);
         const fy = 0.86;
-        ctx.strokeStyle = 'rgba(120,105,84,.18)'; ctx.lineWidth = 0.5;
-        for (let xx = x0 + 1.5; xx < x1; xx += 2.1) {
+        const kind = ch.fit.floor || 'tile';
+        const step = kind === 'wood' ? 3.6 : kind === 'terrazzo' ? 1.5 : kind === 'stone' ? 2.4 : 1.25;
+        ctx.strokeStyle = kind === 'wood' ? 'rgba(128,96,64,.22)' : 'rgba(120,105,84,.18)';
+        ctx.lineWidth = 0.5;
+        for (let xx = x0 + 1.4; xx < x1; xx += step) {
           const a = proj(xx, z0 + 0.2, fy), b = proj(xx, z1 - 0.2, fy);
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
-        for (let zz = z0 + 1.5; zz < z1; zz += 2.1) {
+        for (let zz = z0 + 1.4; zz < z1; zz += step) {
           const a = proj(x0 + 0.2, zz, fy), b = proj(x1 - 0.2, zz, fy);
           ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
         }
+        if (kind === 'terrazzo') {
+          for (let i = 0; i < 45; i++) {
+            const p = proj(x0 + 1.2 + (i * 2.37 % (W0 - 2.2)), z0 + 1.2 + (i * 3.11 % (D0 - 2.2)), fy + 0.01);
+            ctx.fillStyle = ['rgba(156,27,34,.18)', 'rgba(63,98,115,.16)', 'rgba(124,138,118,.2)'][i % 3];
+            ctx.fillRect(p.x, p.y, 1.2, 0.9);
+          }
+        }
         ctx.restore();
       }
+      ctx.restore();
     }
 
-    // tall walls
+    // two stacked storeys: ground walls, then upper walls
     const wallM = matte(th.wall, 0.09, -0.015, -0.13);
     const wall2M = matte(th.wall2, 0.08, -0.02, -0.15);
-    // back wall (z0)
-    drawBox(x0, z0, W0, 0.65, 0.55, Math.max(0.56, hgt), wallM, { alpha: 1 });
-    // left wall (x0)
-    drawBox(x0, z0 + 0.65, 0.65, D0 - 0.65, 0.55, Math.max(0.56, hgt), wall2M, { alpha: 1 });
-    // service core front wall (zS)
-    drawBox(x0 + 0.65, zS - 0.3, W0 - 0.65, 0.6, 0.55, Math.max(0.56, UP * easeOut(wallP)), wallM, { alpha: 1 });
-    // rear right wall (below mezzanine only)
-    drawBox(x1 - 0.65, z0 + 0.65, 0.65, zS - z0 - 0.65, 0.55, Math.max(0.56, UP * easeOut(wallP)), wall2M, { alpha: 1 });
-    // low parapet front & right
-    drawBox(x0, z1 - 0.55, W0, 0.55, 0.55, 0.55 + lowH, wallM, { alpha: 1 });
-    drawBox(x1 - 0.55, zS, 0.55, z1 - zS, 0.55, 0.55 + lowH, wall2M, { alpha: 1 });
-    // corner columns supporting roof
-    drawBox(x1 - 0.75, zS - 0.75, 0.75, 0.75, 0.55, Math.max(0.56, hgt * 0.98), matte(th.trim, 0.05, -0.02, -0.15), { alpha: 1 });
-    drawBox(x0, zS - 0.45, 0.7, 0.7, 0.55, Math.max(0.56, hgt * 0.98), matte(th.trim, 0.05, -0.02, -0.15), { alpha: 1 });
+    const trimM = matte(th.trim, 0.05, -0.02, -0.15);
+    if (gWallP > 0.001) {
+      // back + left walls (ground storey)
+      drawBox(x0, z0, W0, 0.65, 0.55, Math.max(0.56, gH), wallM, { alpha: 1 });
+      drawBox(x0, z0 + 0.65, 0.65, D0 - 0.65, 0.55, Math.max(0.56, gH), wall2M, { alpha: 1 });
+      // service core front wall
+      drawBox(x0 + 0.65, zS - 0.3, W0 - 0.65, 0.6, 0.55, Math.max(0.56, gH), wallM, { alpha: 1 });
+      // rear right wall
+      drawBox(x1 - 0.65, z0 + 0.65, 0.65, zS - z0 - 0.65, 0.55, Math.max(0.56, gH), wall2M, { alpha: 1 });
+      // low parapet front & right
+      drawBox(x0, z1 - 0.55, W0, 0.55, 0.55, 0.55 + lowH, wallM, { alpha: 1 });
+      drawBox(x1 - 0.55, zS, 0.55, z1 - zS, 0.55, 0.55 + lowH, wall2M, { alpha: 1 });
+      // ground columns
+      drawBox(x1 - 0.75, zS - 0.75, 0.75, 0.75, 0.55, Math.max(0.56, gH), trimM, { alpha: 1 });
+      drawBox(x0, zS - 0.45, 0.7, 0.7, 0.55, Math.max(0.56, gH), trimM, { alpha: 1 });
+    }
+    if (uWallP > 0.001) {
+      // upper back + left walls land on the dropped slab
+      drawBox(x0, z0, W0, 0.65, UP - 0.02, Math.max(UP + 0.02, uH), wallM, { alpha: 1 });
+      drawBox(x0, z0 + 0.65, 0.65, D0 - 0.65, UP - 0.02, Math.max(UP + 0.02, uH), wall2M, { alpha: 1 });
+      // upper columns
+      drawBox(x1 - 0.75, zS - 0.75, 0.75, 0.75, UP - 0.02, Math.max(UP + 0.02, uH), trimM, { alpha: 1 });
+      drawBox(x0, zS - 0.45, 0.7, 0.7, UP - 0.02, Math.max(UP + 0.02, uH), trimM, { alpha: 1 });
+    }
 
-    // facade detail: brick bands / bands / wood
-    if (winP > 0.02 && wallP > 0.5) {
-      const fa = winP;
+    // facade detail: drawn with each storey
+    const facadeFloor = (yA, yB, alpha) => {
+      if (alpha <= 0.02) return;
       if (th.facade === 'brick') {
-        ctx.save(); ctx.globalAlpha *= fa * 0.35;
-        for (let yy = 1.4; yy < hgt - 0.5; yy += 0.9) {
+        ctx.save(); ctx.globalAlpha *= alpha * 0.35;
+        for (let yy = yA; yy < yB; yy += 0.9) {
           wallLineZ(z0 + 0.66, x0 + 0.7, x1 - 0.7, yy, shade(th.wall, -0.22), 0.4, 1);
           wallLineX(x0 + 0.66, z0 + 0.8, z1 - 0.8, yy, shade(th.wall2, -0.22), 0.4, 1);
         }
         ctx.restore();
       } else if (th.facade === 'band') {
-        ctx.save(); ctx.globalAlpha *= fa * 0.5;
-        for (let yy = 2.2; yy < hgt; yy += 2.2) {
+        ctx.save(); ctx.globalAlpha *= alpha * 0.5;
+        for (let yy = yA; yy < yB; yy += 2.2) {
           wallLineZ(z0 + 0.66, x0 + 0.7, x1 - 0.7, yy, shade(th.trim, 0.05), 1.1, 1);
           wallLineX(x0 + 0.66, z0 + 0.8, z1 - 0.8, yy, shade(th.trim, 0.05), 1.1, 1);
         }
         ctx.restore();
       } else if (th.facade === 'wood') {
-        ctx.save(); ctx.globalAlpha *= fa * 0.45;
-        for (let yy = 1.0; yy < hgt; yy += 0.55) {
+        ctx.save(); ctx.globalAlpha *= alpha * 0.45;
+        for (let yy = yA; yy < yB; yy += 0.55) {
           wallLineX(x0 + 0.66, z0 + 0.9, zS - 0.2, yy, shade(th.trim, 0.16), 0.5, 1);
         }
         ctx.restore();
       }
-    }
+    };
+    facadeFloor(1.0, UP - 0.2, gWallP);
+    facadeFloor(UP + 0.5, H0 - 0.3, uWallP);
 
-    // windows
-    if (winP > 0) {
-      // upper back wall band
-      windowZ(z0 + 0.66, x0 + 1.0, x1 - 1.0, 5.45, 7.55, th, winP * 0.95, 'grid');
-      // upper left wall feature windows
-      windowX(x0 + 0.66, z0 + 1.2, z0 + 3.6, 5.4, 7.6, th, winP * 0.9, 'grid');
-      windowX(x0 + 0.66, z0 + 4.2, z0 + 6.6, 5.4, 7.6, th, winP * 0.9, 'grid');
-      // service wall lower windows
-      windowZ(zS + 0.31, x0 + 1.1, x0 + 3.1, 2.05, 3.35, th, winP * 0.8, 'grid');
-      windowZ(zS + 0.31, x1 - 3.4, x1 - 1.2, 2.05, 3.35, th, winP * 0.8, 'grid');
-      // feature round window on upper back (theme)
+    // windows open with each storey
+    if (gWinP > 0) {
+      windowZ(zS + 0.31, x0 + 1.1, x0 + 3.1, 2.05, 3.35, th, gWinP * 0.8, 'grid');
+      windowZ(zS + 0.31, x1 - 3.4, x1 - 1.2, 2.05, 3.35, th, gWinP * 0.8, 'grid');
+    }
+    if (uWinP > 0) {
+      windowZ(z0 + 0.66, x0 + 1.0, x1 - 1.0, 5.45, 7.55, th, uWinP * 0.95, 'grid');
+      windowX(x0 + 0.66, z0 + 1.2, z0 + 3.6, 5.4, 7.6, th, uWinP * 0.9, 'grid');
+      windowX(x0 + 0.66, z0 + 4.2, z0 + 6.6, 5.4, 7.6, th, uWinP * 0.9, 'grid');
       const round = proj((x0 + x1) / 2, z0 + 0.68, 6.6);
-      ctx.save(); ctx.globalAlpha *= winP * 0.9;
+      ctx.save(); ctx.globalAlpha *= uWinP * 0.9;
       ctx.fillStyle = shade(th.trim, -0.05);
       ctx.beginPath(); ctx.ellipse(round.x, round.y, 1.05 * IX * view.scale, 1.05 * view.scale, 0, 0, TAU); ctx.fill();
       ctx.fillStyle = th.glass;
@@ -1374,21 +1692,28 @@
       ctx.restore();
     }
 
-    // upper slab + railing + stairs
-    if (floorP > 0) {
-      const slide = (1 - easeOut(floorP)) * -8;
-      ctx.save();
-      ctx.translate(slide * view.scale * 0.6, 0);
-      drawBox(x0 + 0.65, z0 + 0.65, W0 - 1.3, zS - z0 - 0.95, UP, UP + 0.42, matte(th.floor, 0.14, 0.0, -0.10), { alpha: floorP });
-      // upper deck joints
-      ctx.globalAlpha *= floorP * 0.4;
-      for (let xx = x0 + 2; xx < x1 - 1; xx += 2.4) {
-        wallLineX(x0 + 0.65, 0, 0, 0, 'rgba(0,0,0,0)', 0, 0);
-      }
+    // wall finish varies by campus: old wood, tile, pinboard, shelves, stone
+    if (gWinP > 0.35) wallFinish(x0, x1, z0, zS, th, ch.fit.panel, smooth(0.35, 0.7, gWinP));
+
+    // section band: the mezzanine slab edge, so the two stacked storeys read clearly
+    if (uSlabP > 0.08) {
+      ctx.save(); ctx.globalAlpha *= smooth(0.08, 0.5, uSlabP);
+      wallQuadZ(z0 + 0.68, x0 + 0.6, x1 - 0.6, UP - 0.20, UP + 0.24, shade(th.trim, 0.22), 'rgba(80,62,42,.35)', 0.8);
+      wallQuadX(x0 + 0.68, z0 + 0.6, z1 - 0.6, UP - 0.20, UP + 0.24, shade(th.trim, 0.12), 'rgba(80,62,42,.3)', 0.7);
+      drawBox(x0 + 0.2, z1 - 0.42, W0 - 0.4, 0.42, UP - 0.22, UP + 0.16, matte(th.trim, 0.1, -0.01, -0.12), { lw: 0.5 });
       ctx.restore();
     }
-    if (floorP > 0.55) {
-      const fa = smooth(0.55, 0.9, floorP);
+
+    // mezzanine slab drops into place after the ground fit-out
+    if (uSlabP > 0) {
+      const drop = (1 - easeOut(uSlabP)) * 5.0;
+      ctx.save();
+      ctx.translate(0, -drop * view.scale);
+      drawBox(x0 + 0.65, z0 + 0.65, W0 - 1.3, zS - z0 - 0.95, UP, UP + 0.42, matte(th.floor, 0.14, 0.0, -0.10), { alpha: uSlabP });
+      ctx.restore();
+    }
+    if (uSlabP > 0.55) {
+      const fa = smooth(0.55, 0.95, uSlabP);
       // railing along the front edge of the upper deck
       ctx.save(); ctx.globalAlpha *= fa;
       drawBox(x0 + 0.75, zS - 0.5, W0 - 1.5, 0.16, UP + 1.45, UP + 1.62, matte(th.trim, 0.08), { lw: 0.4 });
@@ -1397,7 +1722,7 @@
       }
       ctx.restore();
       // stairs
-      const stairP = smooth(0.5, 0.95, floorP);
+      const stairP = smooth(0.55, 0.95, uSlabP);
       const n = 7;
       for (let i = 0; i < n; i++) {
         const t = i / (n - 1);
@@ -1414,58 +1739,57 @@
       ctx.restore();
     }
 
-    // upper lounge
-    if (floorP > 0.75) {
-      const la = smooth(0.75, 1.0, floorP);
-      // rug
-      ctx.save(); ctx.globalAlpha *= la * 0.9;
-      const rug = proj((x0 + x1) / 2, z0 + 2.3, UP + 0.44);
-      ctx.fillStyle = 'rgba(193,164,135,.5)';
-      ctx.beginPath(); ctx.ellipse(rug.x, rug.y, 3.6 * IX * view.scale, 1.5 * view.scale, 0, 0, TAU); ctx.fill();
-      ctx.restore();
-      bookshelf(x0 + 1.0, z0 + 0.85, la);
-      couch(x0 + 3.4, z0 + 1.0, la, th);
-      // coffee table
-      drawBox(x0 + 4.0, z0 + 3.0, 2.0, 1.2, UP + 0.44, UP + 0.95, matte('#B6A080', 0.1), { alpha: la, lw: 0.4 });
-      plant(x0 + 6.5, z0 + 2.2, 0.7, la, 3.1);
+    // upper deck fit-out: different room per campus
+    if (uFurnP > 0.001) {
+      upperFit(ch, x0, x1, z0, zS, UP, uFurnP, th);
     }
 
-    // ground furniture
-    if (furnP > 0.001) {
-      // stalls
-      const stallW = 2.35, stallD = 2.0, stallH = 3.05;
-      for (let i = 0; i < 3; i++) {
-        const t0 = 0.02 + i * 0.12;
-        const a = smooth(t0, t0 + 0.2, furnP);
-        stall(x0 + 1.1 + i * stallW, zS + 0.15, stallW, stallD, stallH, th, i === 1, a);
+    // ground furniture: layout differs by campus
+    if (gFurnP > 0.001) {
+      const fit = ch.fit;
+      const stallN = fit.stalls || 3;
+      const stallW = stallN >= 4 ? 1.95 : 2.3;
+      const stallD = 2.0, stallH = 3.05;
+      const leftSide = fit.stallSide !== 'right';
+      const stallX = leftSide ? x0 + 0.95 : x1 - 0.8 - stallN * stallW;
+      for (let i = 0; i < stallN; i++) {
+        const t0 = 0.02 + i * 0.10;
+        const a = smooth(t0, t0 + 0.18, gFurnP);
+        stall(stallX + i * stallW, zS + 0.15, stallW, stallD, stallH, th, i === 0, a);
       }
-      // sinks
-      const sinkA = smooth(0.28, 0.52, furnP);
-      sinkCounter(x0 + 0.75, z0 + 6.8, sinkA, th);
-      // bench + plant + bin
-      const benchA = smooth(0.50, 0.74, furnP);
-      drawBench(x1 - 4.4, z1 - 2.4, benchA);
-      plant(x1 - 1.2, z1 - 1.2, 1.1, smooth(0.36, 0.6, furnP), 1.7);
-      plant(x0 + 2.0, z1 - 1.0, 0.8, smooth(0.58, 0.8, furnP), 2.7);
+      // sinks on the opposite side
+      const sinkA = smooth(0.30, 0.56, gFurnP);
+      if (fit.extras.indexOf('trough') < 0) {
+        const sinkX = fit.sinkSide === 'right' ? x1 - 2.65 : x0 + 0.75;
+        const mirrorX = fit.sinkSide === 'right' ? x1 - 0.66 : x0 - 0.02;
+        sinkCounter(sinkX, z0 + 6.8, sinkA, th, mirrorX);
+      } else {
+        // long trough sink for the teaching building
+        drawBox(x1 - 5.0, z0 + 6.7, 4.2, 1.55, 0.4, 1.55, matte('#E6DDCA'), { lw: 0.5, alpha: sinkA });
+        drawBox(x1 - 4.85, z0 + 6.82, 3.9, 1.3, 1.55, 1.7, matte('#F5EFE3'), { lw: 0.4, alpha: sinkA });
+        for (let i = 0; i < 3; i++) {
+          const f = proj(x1 - 4.6 + i * 1.2, z0 + 7.15, 1.95);
+          ctx.save(); ctx.globalAlpha *= sinkA; ctx.strokeStyle = '#7B8A8E'; ctx.lineWidth = 1.1;
+          ctx.beginPath(); ctx.moveTo(f.x, f.y + 4); ctx.lineTo(f.x, f.y - 3); ctx.lineTo(f.x + 5, f.y - 2); ctx.stroke(); ctx.restore();
+        }
+        wallQuadX(x1 - 0.66, z0 + 6.9, z0 + 8.2, 2.3, 3.5, 'rgba(80,96,104,.25)', 'rgba(70,60,45,.3)', sinkA);
+      }
+      // entrance bench, plants
+      const benchA = smooth(0.52, 0.78, gFurnP);
+      drawBench((x0 + x1) / 2 - 1.2, z1 - 1.45, benchA);
+      plant(x0 + 0.85, z1 - 1.1, 0.95, smooth(0.36, 0.62, gFurnP), 1.7 + ch.index);
+      plant(x1 - 0.85, z1 - 1.1, 0.8, smooth(0.56, 0.82, gFurnP), 2.7 + ch.index);
       // hand dryer on service wall
-      const hdA = smooth(0.56, 0.8, furnP);
+      const hdA = smooth(0.56, 0.8, gFurnP);
       if (hdA > 0.01) {
         drawBox(x1 - 2.4, zS + 0.28, 0.7, 0.35, 1.7, 2.5, matte('#E9E4D8'), { alpha: hdA, lw: 0.4 });
       }
-      // poster on service wall
-      if (winP > 0.5) {
-        ctx.save(); ctx.globalAlpha *= winP * 0.9;
-        wallQuadZ(zS + 0.32, x1 - 5.4, x1 - 3.9, 1.7, 3.2, 'rgba(248,242,230,.95)', 'rgba(120,105,84,.4)', 1);
-        wallQuadZ(zS + 0.33, x1 - 5.4, x1 - 3.9, 2.85, 3.1, th.accent, null, 1);
-        wallLineZ(zS + 0.34, x1 - 5.2, x1 - 4.1, 2.25, 'rgba(120,105,84,.35)', 0.6, 1);
-        wallLineZ(zS + 0.34, x1 - 5.2, x1 - 4.3, 2.05, 'rgba(120,105,84,.28)', 0.5, 1);
-        ctx.restore();
-      }
+      fitExtras(ch, x0, x1, z0, z1, zS, smooth(0.5, 0.85, gFurnP), th, now);
     }
 
     // door on service wall + frame
-    if (winP > 0.4) {
-      ctx.save(); ctx.globalAlpha *= winP;
+    if (gWinP > 0.4) {
+      ctx.save(); ctx.globalAlpha *= gWinP;
       wallQuadZ(zS + 0.32, x0 + 3.7, x0 + 5.7, 0.55, 3.25, shade(th.trim, 0.12), shade(th.trim, -0.4), 1);
       const dh = proj(x0 + 4.7, zS + 0.33, 2.95);
       ctx.fillStyle = 'rgba(230,210,160,.9)';
@@ -1475,8 +1799,8 @@
 
     // roof
     if (roofP > 0.001) {
-      const drop = (1 - easeOut(roofP)) * 7;
-      const ra = smooth(0, 0.12, roofP);
+      const drop = (1 - easeOut(roofP)) * 3.6;
+      const ra = smooth(0, 0.2, roofP);
       ctx.save();
       ctx.globalAlpha *= ra;
       ctx.translate(0, -drop * view.scale);
@@ -1497,10 +1821,14 @@
         // fascia
         poly([proj(x0 - 1, zS + 1, ry0 + 0.7), proj(x1 + 1, zS + 1, ry0 + 0.7), proj(x1 + 1, zS + 1, ry0 + 0.1), proj(x0 - 1, zS + 1, ry0 + 0.1)], shade(th.roof, -0.16), shade(th.roof, -0.3), 0.8);
       } else {
-        drawBox(x0 - 0.8, z0 - 0.8, W0 + 1.6, zS - z0 + 1.4, hgt + 0.15, hgt + 0.75, matte(th.roof, 0.12, 0.01, -0.12), { lw: 0.6 });
-        drawBox(x0 - 0.9, z0 - 0.9, W0 + 1.8, 0.3, hgt + 0.7, hgt + 1.25, matte(th.roof2, 0.05), { lw: 0.5 });
-        // roof deck detail
-        drawBox(x1 - 3.2, z0 + 1.4, 1.8, 1.2, hgt + 0.75, hgt + 1.5, matte(th.wall2, 0.04), { lw: 0.4 });
+        // cut-away flat roof: a perimeter parapet frame, open over the deck
+        drawBox(x0 - 0.8, z0 - 0.8, W0 + 1.6, 0.9, hgt + 0.15, hgt + 0.9, matte(th.roof, 0.12, 0.01, -0.12), { lw: 0.6 });
+        drawBox(x0 - 0.8, z0 - 0.8, 0.9, zS - z0 + 1.5, hgt + 0.15, hgt + 0.9, matte(th.roof, 0.1, 0.01, -0.12), { lw: 0.5 });
+        drawBox(x1 - 0.1, z0 - 0.8, 0.9, zS - z0 + 1.5, hgt + 0.15, hgt + 0.9, matte(th.roof2, 0.08, 0.01, -0.12), { lw: 0.5 });
+        drawBox(x0 - 0.8, zS + 0.5, W0 + 1.6, 0.8, hgt + 0.15, hgt + 0.8, matte(th.roof2, 0.06), { lw: 0.5 });
+        // rooftop plant unit at the rear, out of the cut
+        drawBox(x1 - 3.2, z0 + 0.4, 1.8, 1.2, hgt + 0.9, hgt + 1.7, matte(th.wall2, 0.04), { lw: 0.4 });
+        for (let i = 0; i < 3; i++) wallLineZ(z0 + 0.4, x1 - 2.9 + i * 0.55, x1 - 2.9 + i * 0.55, hgt + 1.0, hgt + 1.6, 'rgba(100,110,108,.3)', 0.4, 1);
       }
       // courtyard glass canopy
       const ca = smooth(0.25, 0.7, roofP);
@@ -2701,7 +3029,16 @@
 
     // status
     const ch = chapters[nearest];
-    const stage = ch.p < 0.12 ? '正在放线' : ch.p < 0.3 ? '正在砌墙' : ch.p < 0.46 ? '正在铺楼板' : ch.p < 0.62 ? '正在装窗' : ch.p < 0.78 ? '正在上屋顶' : ch.p < 0.97 ? '正在摆家具' : '已经开放';
+    const stage = ch.p < 0.12 ? '正在放线'
+      : ch.p < 0.16 ? '正在打地基'
+        : ch.p < 0.30 ? '正在起一层墙体'
+          : ch.p < 0.38 ? '正在装一层窗'
+            : ch.p < 0.52 ? '正在摆一层家具'
+              : ch.p < 0.60 ? '正在吊装楼板'
+                : ch.p < 0.69 ? '正在起二层墙体'
+                  : ch.p < 0.76 ? '正在装二层窗'
+                    : ch.p < 0.84 ? '正在摆二层家具'
+                      : ch.p < 0.95 ? '正在封屋顶' : ch.p < 0.995 ? '正在收边' : '已经开放';
     let title = '沿路前行 · ' + ch.campus;
     if (Math.abs(scrollState.camD - ch.d) < 19) title = pad2(ch.index + 1) + ' ' + ch.short + ' · ' + stage;
     if (scrollState.camD < 2) title = '正在放线 · 校园选址';
